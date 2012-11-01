@@ -1,0 +1,48 @@
+#!/usr/bin/env emacs --script
+
+(let ((current-directory (file-name-directory load-file-name)))
+  (setq helm-rails-test-path (expand-file-name "." current-directory))
+  (setq helm-rails-root-path (expand-file-name ".." current-directory))
+  ;; (setq helm-rails-test-app-path (concat helm-rails-test-path "/test-app/"))
+  (add-to-list 'load-path helm-rails-root-path)
+  (add-to-list 'load-path helm-rails-test-path)
+  (load (expand-file-name "test-helper.el" helm-rails-test-path) nil t))
+
+(require 'helm-rails)
+(require 'ert-expectations)
+
+(dolist (test-file (or command-line-args-left (directory-files (expand-file-name ".") t "-test.el$")))
+  (load test-file nil t))
+
+;; (flet ((magit-git-dir () (concat (file-name-directory helm-rails-test-path) "test-app/.git/")))
+;;   (ert-run-tests-batch t))
+
+(with-temp-git-repo repo
+  (loop for directory in '("app/"
+			   "app/models/"
+			   "app/controllers"
+			   "app/controllers/admin"
+			   "app/helpers"
+			   "app/views"
+			   "app/views/users"
+			   "lib"
+			   "spec"
+			   "spec/models/"
+			   "spec/controllers/"
+			   "spec/helpers/")
+	do (make-directory directory))
+
+  (loop for file-path in '("app/models/criterion.rb"
+			   "app/models/user.rb"
+			   "app/controllers/users_controller.rb"
+			   "app/controllers/people_controller.rb"
+			   "app/controllers/admin/users_controller.rb"
+			   "app/helpers/users_helper.rb"
+			   "app/views/users/index.html.erb"
+			   "app/views/users/show.html.erb"
+			   "spec/controllers/users_controller_spec.rb"
+			   "spec/helpers/users_helper_spec.rb"
+			   "spec/models/user_spec.rb"
+			   )
+	do (create-file-in-repo repo file-path))
+		    (ert-run-tests-batch t))

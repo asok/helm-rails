@@ -1,0 +1,13 @@
+(source "melpa" "http://melpa.milkbox.net/packages/")
+(source "marmalade" "http://marmalade-repo.org/packages/")
+
+(package "helm-rails" "0.1.0" "Helm extension for rails")
+
+(depends-on "helm")
+(depends-on "magit")
+(depends-on "inflections")
+
+(development
+ (depends-on "ert")
+ (depends-on "ecukes")
+ (depends-on "espuds"))
