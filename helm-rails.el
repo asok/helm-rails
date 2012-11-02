@@ -21,7 +21,6 @@
 			   "\\|"))
   )
 
-
 (defvar helm-rails-other-c-source
   '((name . "Other files")
     (disable-shortcuts)
@@ -94,21 +93,14 @@
 		   helm-rails-helpers-c-source
 		   helm-rails-libs-c-source
 		   helm-rails-specs-c-source
+		   helm-rails-javascripts-c-source
+		   helm-rails-stylesheets-c-source
 		   helm-rails-other-c-source)
 	)
   )
 
-(loop for resource in 
-      helm-rails-resources-schema
-      do (eval
-	  `(progn
-	     (helm-rails-def-c-source ,(first resource) ,(second resource) ,(third resource))
-	     (helm-rails-def-current-scope-c-source ,(first resource))
-	     (helm-rails-def-command ,(first resource) ))
-	  )
-      )
-
 (defun helm-rails-current-resource ()
+  "Returns a resource name extracted from the name of the currently visiting file"
   (let ((file-name (buffer-file-name)))
     (if file-name
 	(singularize-string (catch 'break (loop for re in '("app/models/\\(.+\\)\\.rb$"
@@ -127,22 +119,22 @@
   (expand-file-name "../" (magit-git-dir)))
 
 (defun helm-rails-files (path &optional regexp)
-  "Returns a list of the files from supplied PATH and matched against supplied REGEXP"
-  (let ((list (helm-rails-sub-magit-lines path)))
+  "Returns a *list* of the files from supplied PATH and matched against supplied REGEXP"
+  (let ((list (magit-split-lines (helm-rails-sub-magit-output path))))
     (if regexp
 	(delete-if-not (lambda (c) (string-match-p regexp c)) list)
       list)))
 
-(defun helm-rails-sub-magit-lines (subpath)
-  "Calls magit ls-files to obtain list of files from supplied SUBPATH"
-  (magit-git-lines "ls-files" "--full-name" "--" (concat (helm-rails-root) subpath)))
+(defun helm-rails-sub-magit-output (&optional subpath)
+  "Returns output of git ls-files from supplied SUBPATH called via magit"
+  (magit-git-output `("ls-files" "--full-name" "--" ,(concat (helm-rails-root) subpath))))
 
 (defun helm-rails-other-files ()
   "Returns git output for all other files than the ones from `helm-rails-resources-schema'"
   (replace-regexp-in-string
    helm-rails-other-files-exclude-regexp
    ""
-   (magit-git-output `("ls-files" "--full-name" "--" ,(helm-rails-root)))))
+   (helm-rails-sub-magit-output)))
 
 (defun helm-rails-current-scope-files (target)
   (let ((current-resource (helm-rails-current-resource)))
@@ -174,5 +166,16 @@
       (file-exists-p (expand-file-name
 		      "environment.rb" (expand-file-name "../config" (magit-git-dir))))
     (error nil)))
+
+(loop for resource in 
+      helm-rails-resources-schema
+      do (eval
+	  `(progn
+	     (helm-rails-def-c-source ,(first resource) ,(second resource) ,(third resource))
+	     (helm-rails-def-current-scope-c-source ,(first resource))
+	     (helm-rails-def-command ,(first resource) ))
+	  )
+      )
+
 
 (provide 'helm-rails)
