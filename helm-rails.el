@@ -40,21 +40,21 @@
 (require 'inflections)
 
 (defvar helm-rails-resources-schema
-  '((models  "app/models/")
-    (views  "app/views/")
-    (controllers  "app/controllers/")
-    (helpers  "app/helpers/")
-    (mailers  "app/mailers/")
-    (specs  "spec/" "_spec\\.rb$")
-    (libs  "lib/")
-    (javascripts  "public/javascripts/")
-    (stylesheets  "public/stylesheets/")
+  '((models	 "app/models/"         "app/models/")
+    (views	 "app/views/"          "app/views/")
+    (controllers "app/controllers/"    "app/controllers/")
+    (helpers	 "app/helpers/"        "app/helpers/")
+    (mailers	 "app/mailers/"        "app/mailers/")
+    (specs	 "spec/"               "spec/.+_spec\\.rb" "_spec\\.rb$" )
+    (libs	 "lib/"                "lib/")
+    (javascripts "public/javascripts/" "public/javascripts/")
+    (stylesheets "public/stylesheets/" "public/stylesheets/")
     ))
 
 (defvar helm-rails-other-files-exclude-regexp
-  (format "^\\(%s\\).+\n" (mapconcat
+  (format "^\\(%s\\).*\n" (mapconcat
 			   'identity
-			   (mapcar 'second helm-rails-resources-schema)
+			   (mapcar 'third helm-rails-resources-schema)
 			   "\\|"))
   )
 
@@ -192,7 +192,7 @@
       helm-rails-resources-schema
       do (eval
 	  `(progn
-	     (helm-rails-def-c-source ,(first resource) ,(second resource) ,(third resource))
+	     (helm-rails-def-c-source ,(first resource) ,(second resource) ,(fourth resource))
 	     (helm-rails-def-current-scope-c-source ,(first resource))
 	     (helm-rails-def-command ,(first resource) ))
 	  )
