@@ -82,23 +82,6 @@
      )
   )
 
-(defun helm-rails-all ()
-  "Search for all files in the rails project"
-  (interactive)
-  (unless (helm-rails-project-p)
-    (error "Not inside a rails git repository"))
-  (helm :sources '(helm-rails-models-c-source
-		   helm-rails-views-c-source
-		   helm-rails-controllers-c-source
-		   helm-rails-helpers-c-source
-		   helm-rails-libs-c-source
-		   helm-rails-specs-c-source
-		   helm-rails-javascripts-c-source
-		   helm-rails-stylesheets-c-source
-		   helm-rails-other-c-source)
-	)
-  )
-
 (defun helm-rails-current-resource ()
   "Returns a resource name extracted from the name of the currently visiting file"
   (let ((file-name (buffer-file-name)))
@@ -118,6 +101,7 @@
   "Returns root of the rails git project"
   (expand-file-name "../" (magit-git-dir)))
 
+;todo: this should return output from magit-git-output but grepped against REGEXP (but how?)
 (defun helm-rails-files (path &optional regexp)
   "Returns a *list* of the files from supplied PATH and matched against supplied REGEXP"
   (let ((list (magit-split-lines (helm-rails-sub-magit-output path))))
@@ -177,5 +161,21 @@
 	  )
       )
 
+(defun helm-rails-all ()
+  "Search for all files in the rails project"
+  (interactive)
+  (unless (helm-rails-project-p)
+    (error "Not inside a rails git repository"))
+  (helm :sources '(helm-rails-models-c-source
+		   helm-rails-views-c-source
+		   helm-rails-controllers-c-source
+		   helm-rails-helpers-c-source
+		   helm-rails-libs-c-source
+		   helm-rails-specs-c-source
+		   helm-rails-javascripts-c-source
+		   helm-rails-stylesheets-c-source
+		   helm-rails-other-c-source)
+	)
+  )
 
 (provide 'helm-rails)
