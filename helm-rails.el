@@ -42,7 +42,7 @@
        (init . (lambda ()
 		 (helm-init-candidates-in-buffer 'local
 						 (mapcar (lambda (c) (substring c (length ,path)))
-							 (helm-rails-files ,path)))))
+							 (helm-rails-files ,path ,regexp)))))
        (candidates-in-buffer)
        (help-message . helm-generic-file-help-message)
        (candidate-number-limit . 10)

@@ -41,6 +41,7 @@
 			   "app/helpers/users_helper.rb"
 			   "app/views/users/index.html.erb"
 			   "app/views/users/show.html.erb"
+			   "spec/spec_helper.rb"
 			   "spec/controllers/users_controller_spec.rb"
 			   "spec/helpers/users_helper_spec.rb"
 			   "spec/models/user_spec.rb"
