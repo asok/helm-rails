@@ -3,15 +3,15 @@
 (require 'inflections)
 
 (defvar helm-rails-resources-schema
-  '((models  "app/models/" "\\.rb$")
-    (views  "app/views/" "\\.\\(haml\\|erb\\)$")
-    (controllers  "app/controllers/" "\\.rb$")
-    (helpers  "app/helpers/" "\\.rb$")
-    (mailers  "app/mailers/" "\\.rb$")
+  '((models  "app/models/")
+    (views  "app/views/")
+    (controllers  "app/controllers/")
+    (helpers  "app/helpers/")
+    (mailers  "app/mailers/")
     (specs  "spec/" "_spec\\.rb$")
-    (libs  "lib/" "\\.rb$")
-    (javascripts  "public/javascripts/" "\\.js$")
-    (stylesheets  "public/stylesheets/" "\\.css$")
+    (libs  "lib/")
+    (javascripts  "public/javascripts/")
+    (stylesheets  "public/stylesheets/")
     ))
 
 (defvar helm-rails-other-files-exclude-regexp
