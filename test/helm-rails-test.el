@@ -1,4 +1,9 @@
 (expectations
+ (desc "heml-rails-other-files-exclude-regepx"
+       (expect "^\\(app/models/\\|app/views/\\|app/controllers/\\|app/helpers/\\|app/mailers/\\|spec/\\|lib/\\|public/javascripts/\\|public/stylesheets/\\).+\n" 
+	       helm-rails-other-files-exclude-regexp)
+       )
+
  (desc "helm-rails-files"
        (desc "without regexp"
 	     (expect '("app/models/criterion.rb"

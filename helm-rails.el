@@ -2,6 +2,26 @@
 (require 'helm)
 (require 'inflections)
 
+(defvar helm-rails-resources-schema
+  '((models  "app/models/" "\\.rb$")
+    (views  "app/views/" "\\.\\(haml\\|erb\\)$")
+    (controllers  "app/controllers/" "\\.rb$")
+    (helpers  "app/helpers/" "\\.rb$")
+    (mailers  "app/mailers/" "\\.rb$")
+    (specs  "spec/" "_spec\\.rb$")
+    (libs  "lib/" "\\.rb$")
+    (javascripts  "public/javascripts/" "\\.js$")
+    (stylesheets  "public/stylesheets/" "\\.css$")
+    ))
+
+(defvar helm-rails-other-files-exclude-regexp
+  (format "^\\(%s\\).+\n" (mapconcat
+			   'identity
+			   (mapcar 'second helm-rails-resources-schema)
+			   "\\|"))
+  )
+
+
 (defvar helm-rails-other-c-source
   '((name . "Other files")
     (disable-shortcuts)
@@ -78,22 +98,13 @@
 	)
   )
 
-(loop for args in 
-      '((models  "app/models/" "\\.rb$")
-	(views  "app/views/" "\\.\\(haml\\|erb\\)$")
-	(controllers  "app/controllers/" "\\.rb$")
-	(helpers  "app/helpers/" "\\.rb$")
-	(mailers  "app/mailers/" "\\.rb$")
-	(specs  "spec/" "_spec\\.rb$")
-	(libs  "lib/" "\\.rb$")
-	(javascripts  "public/javascripts/" "\\.js$")
-	(stylesheets  "public/stylesheets/" "\\.css$")
-	)
+(loop for resource in 
+      helm-rails-resources-schema
       do (eval
 	  `(progn
-	     (helm-rails-def-c-source ,(first args) ,(second args) ,(third args))
-	     (helm-rails-def-current-scope-c-source ,(first args))
-	     (helm-rails-def-command ,(first args) ))
+	     (helm-rails-def-c-source ,(first resource) ,(second resource) ,(third resource))
+	     (helm-rails-def-current-scope-c-source ,(first resource))
+	     (helm-rails-def-command ,(first resource) ))
 	  )
       )
 
@@ -127,8 +138,9 @@
   (magit-git-lines "ls-files" "--full-name" "--" (concat (helm-rails-root) subpath)))
 
 (defun helm-rails-other-files ()
+  "Returns git output for all other files than the ones from `helm-rails-resources-schema'"
   (replace-regexp-in-string
-   "^\\(app/models/\\|app/controllers/\\|app/views/\\|app/helpers/\\|lib/\\|spec/\\).+\n"
+   helm-rails-other-files-exclude-regexp
    ""
    (magit-git-output `("ls-files" "--full-name" "--" ,(helm-rails-root)))))
 
