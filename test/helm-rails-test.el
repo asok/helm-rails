@@ -58,33 +58,33 @@
 		     (find-file "app/models/user.rb")
 		     (helm-rails-current-scope-files 'controllers)))
        (desc "finding model from controller"
-	     (expect '("app/models/user.rb")
-		     (find-file "app/controllers/users_controller.rb")
-		     (helm-rails-current-scope-files 'models)))
+       	     (expect '("app/models/user.rb")
+       		     (find-file "app/controllers/users_controller.rb")
+       		     (helm-rails-current-scope-files 'models)))
        (desc "finding model from namespaced controller"
-	     (expect '("app/models/user.rb")
-		     (find-file "app/controllers/admin/users_controller.rb")
-		     (helm-rails-current-scope-files 'models)))
+       	     (expect '("app/models/user.rb")
+       		     (find-file "app/controllers/admin/users_controller.rb")
+       		     (helm-rails-current-scope-files 'models)))
        (desc "finding helper from controller"
-	     (expect '("app/helpers/users_helper.rb")
-		     (find-file "app/controllers/users_controller.rb")
-		     (helm-rails-current-scope-files 'helpers)))
+       	     (expect '("app/helpers/users_helper.rb")
+       		     (find-file "app/controllers/users_controller.rb")
+       		     (helm-rails-current-scope-files 'helpers)))
        (desc "finding view from controller"
-	     (expect '("app/views/users/index.html.erb"
-		       "app/views/users/show.html.erb")
-		     (find-file "app/controllers/users_controller.rb")
-		     (helm-rails-current-scope-files 'views)))
+       	     (expect '("app/views/users/index.html.erb"
+       		       "app/views/users/show.html.erb")
+       		     (find-file "app/controllers/users_controller.rb")
+       		     (helm-rails-current-scope-files 'views)))
        (desc "finding spec from controller"
-	     (expect '("spec/controllers/users_controller_spec.rb"
-		       "spec/helpers/users_helper_spec.rb"
-		       "spec/models/user_spec.rb")
-		     (find-file "app/controllers/users_controller.rb")
-		     (helm-rails-current-scope-files 'specs)))
+       	     (expect '("spec/controllers/users_controller_spec.rb"
+       		       "spec/helpers/users_helper_spec.rb"
+       		       "spec/models/user_spec.rb")
+       		     (find-file "app/controllers/users_controller.rb")
+       		     (helm-rails-current-scope-files 'specs)))
        (desc "finding non-existant spec from controller"
-	     (expect '()
-		     (find-file "app/controllers/people_controller.rb")
-		     (helm-rails-current-scope-files 'specs))
-	     )
+       	     (expect '()
+       		     (find-file "app/controllers/people_controller.rb")
+       		     (helm-rails-current-scope-files 'specs))
+       	     )
        )
 
  (desc "helm-rails-other-files"

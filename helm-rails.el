@@ -132,21 +132,22 @@
 (defun helm-rails-current-scope-files (target)
   (let ((current-resource (helm-rails-current-resource)))
     (if current-resource
-  	(cond ((equal target 'models)
-  	       (helm-rails-files "app/models/" (concat current-resource "\\.rb$")))
-  	      ((equal target 'controllers)
-  	       (helm-rails-files "app/controllers/" (concat (pluralize-string current-resource) "_controller\\.rb$")))
-  	      ((equal target 'helpers)
-  	       (helm-rails-files "app/helpers/" (concat (pluralize-string current-resource) "_helper\\.rb$")))
-  	      ((equal target 'views)
-  	       (helm-rails-files "app/views/" (concat (pluralize-string current-resource) "/[^/]+$")))
-  	      ((equal target 'specs)
-  	       (helm-rails-files "spec/" (format "\\(%s_controller\\|%s\\|%s_helper\\)_spec\\.rb"
-						 (pluralize-string current-resource)
-						 current-resource
-						 (pluralize-string current-resource))))
-  	      (t
-  	       '()))
+  	(apply
+	 'helm-rails-files
+	 (cond ((equal target 'models)
+		`("app/models/" ,(concat current-resource "\\.rb$")))
+	       ((equal target 'controllers)
+		`("app/controllers/" ,(concat (pluralize-string current-resource) "_controller\\.rb$")))
+	       ((equal target 'helpers)
+		`("app/helpers/" ,(concat (pluralize-string current-resource) "_helper\\.rb$")))
+	       ((equal target 'views)
+		`("app/views/" ,(concat (pluralize-string current-resource) "/[^/]+$")))
+	       ((equal target 'specs)
+		`("spec/" ,(format "\\(%s_controller\\|%s\\|%s_helper\\)_spec\\.rb"
+				   (pluralize-string current-resource)
+				   current-resource
+				   (pluralize-string current-resource))))
+	       ))
       '()
       )
     )
