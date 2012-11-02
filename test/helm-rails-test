@@ -26,6 +26,7 @@
 			   "app/views"
 			   "app/views/users"
 			   "lib"
+			   "config"
 			   "spec"
 			   "spec/models/"
 			   "spec/controllers/"
@@ -43,6 +44,8 @@
 			   "spec/controllers/users_controller_spec.rb"
 			   "spec/helpers/users_helper_spec.rb"
 			   "spec/models/user_spec.rb"
+			   "Gemfile"
+			   "config/environment.rb"
 			   )
 	do (create-file-in-repo repo file-path))
 		    (ert-run-tests-batch t))

@@ -2,6 +2,20 @@
 (require 'helm)
 (require 'inflections)
 
+(defvar helm-rails-other-c-source
+  '((name . "Other files")
+    (disable-shortcuts)
+    (init . (lambda ()
+	      (helm-init-candidates-in-buffer 'local (helm-rails-other-files))))
+    (candidates-in-buffer)
+    (help-message . helm-generic-file-help-message)
+    (candidate-number-limit . 10)
+    (mode-line . helm-generic-file-mode-line-string)
+    (action . (lambda (c)
+		(find-file (concat (helm-rails-root) c))))
+    (type . file))
+  )
+
 (defmacro helm-rails-def-c-source (name path &optional regexp)
   `(defvar ,(intern (format "helm-rails-%S-c-source" name))
      '((name . ,(format "%S" name))
@@ -49,6 +63,21 @@
      )
   )
 
+(defun helm-rails-all ()
+  "Search for all files in the rails projecte"
+  (interactive)
+  ;; (unless (magit-git-repo-p default-directory)
+  ;;   (error "Not inside git repository"))
+  (helm :sources '(helm-rails-models-c-source
+		   helm-rails-views-c-source
+		   helm-rails-controllers-c-source
+		   helm-rails-helpers-c-source
+		   helm-rails-libs-c-source
+		   helm-rails-specs-c-source
+		   helm-rails-other-c-source)
+	)
+  )
+
 (loop for args in 
       '((models  "app/models/" "\\.rb$")
 	(views  "app/views/" "\\.\\(haml\\|erb\\)$")
@@ -93,6 +122,12 @@
 
 (defun helm-rails-sub-magit-lines (subpath)
   (magit-git-lines "ls-files" "--full-name" "--" (concat (helm-rails-root) subpath)))
+
+(defun helm-rails-other-files ()
+  (replace-regexp-in-string
+   "^\\(app/models/\\|app/controllers/\\|app/views/\\|app/helpers/\\|lib/\\|spec/\\).+\n"
+   ""
+   (magit-git-output `("ls-files" "--full-name" "--" ,(helm-rails-root)))))
 
 (defun helm-rails-current-scope-files (target)
   (let ((current-resource (helm-rails-current-resource)))

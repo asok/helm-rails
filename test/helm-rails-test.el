@@ -12,7 +12,6 @@
        		     (helm-rails-files "app/models/" "\\.yaml$")))
        )
 
-
  (desc "helm-rails-current-resource"
        (desc "being in models scope"
  	     (expect "user"
@@ -86,5 +85,12 @@
 		     (find-file "app/controllers/people_controller.rb")
 		     (helm-rails-current-scope-files 'specs))
 	     )
+       )
+
+ (desc "helm-rails-other-files"
+       (expect "Gemfile\nconfig/environment.rb\n"
+	       (find-file "app/controllers/users_controller.rb")
+	       (helm-rails-other-files)
+	       )
        )
  )
