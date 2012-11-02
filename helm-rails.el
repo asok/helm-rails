@@ -53,8 +53,8 @@
   `(defun ,(intern (format "helm-rails-%S" name)) ()
      ,(format "Search for %S" name)
      (interactive)
-     ;; (unless (magit-git-repo-p default-directory)
-     ;;   (error "Not inside git repository"))
+     (unless (helm-rails-project-p)
+       (error "Not inside a rails git repository"))
      (helm :sources (list
 		     ,(intern (format "helm-rails-current-scope-%S-c-source" name))
 		     ,(intern (format "helm-rails-%S-c-source" name))
@@ -64,10 +64,10 @@
   )
 
 (defun helm-rails-all ()
-  "Search for all files in the rails projecte"
+  "Search for all files in the rails project"
   (interactive)
-  ;; (unless (magit-git-repo-p default-directory)
-  ;;   (error "Not inside git repository"))
+  (unless (helm-rails-project-p)
+    (error "Not inside a rails git repository"))
   (helm :sources '(helm-rails-models-c-source
 		   helm-rails-views-c-source
 		   helm-rails-controllers-c-source
@@ -152,5 +152,11 @@
       )
     )
   )
+
+(defun helm-rails-project-p ()
+  (condition-case nil
+      (file-exists-p (expand-file-name
+		      "environment.rb" (expand-file-name "../config" (magit-git-dir))))
+    (error nil)))
 
 (provide 'helm-rails)
