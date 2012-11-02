@@ -1,6 +1,6 @@
 # Synopsis
 
-helm-rails is an extension for [helm](https://github.com/emacs-helm/helm) for working in the rails project. It is borrowing idea from [helm-git](https://github.com/maio/helm-git) that is asking git for a list of candidates.
+helm-rails is an extension for [helm](https://github.com/emacs-helm/helm) for working with Rails project. It is borrowing idea from [helm-git](https://github.com/maio/helm-git) that is asking git for a list of candidates.
 
 You can find any files that are tracked by git. There are commands `helm-rails-*` (like `helm-rails-models`) for traversing resources. And there are also `helm-rails-*-c-source` that shows files that are revelant to the buffer's filename.
 
