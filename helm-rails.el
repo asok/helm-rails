@@ -112,15 +112,18 @@
   )
 
 (defun helm-rails-root ()
+  "Returns root of the rails git project"
   (expand-file-name "../" (magit-git-dir)))
 
 (defun helm-rails-files (path &optional regexp)
+  "Returns a list of the files from supplied PATH and matched against supplied REGEXP"
   (let ((list (helm-rails-sub-magit-lines path)))
     (if regexp
 	(delete-if-not (lambda (c) (string-match-p regexp c)) list)
       list)))
 
 (defun helm-rails-sub-magit-lines (subpath)
+  "Calls magit ls-files to obtain list of files from supplied SUBPATH"
   (magit-git-lines "ls-files" "--full-name" "--" (concat (helm-rails-root) subpath)))
 
 (defun helm-rails-other-files ()
@@ -154,6 +157,7 @@
   )
 
 (defun helm-rails-project-p ()
+  "Returns t if we are inside a rails git repository"
   (condition-case nil
       (file-exists-p (expand-file-name
 		      "environment.rb" (expand-file-name "../config" (magit-git-dir))))
