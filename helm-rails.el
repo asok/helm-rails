@@ -40,41 +40,33 @@
 (require 'inflections)
 
 (defvar helm-rails-resources-schema
-  '((:name models
-	   :path "app/models/"         :exclude-re "^app/models/")
-    (:name views
-	   :path "app/views/"          :exclude-re "^app/views/")
-    (:name controllers
-	   :path "app/controllers/"    :exclude-re "^app/controllers/")
-    (:name helpers
-	   :path "app/helpers/"        :exclude-re "^app/helpers/")
-    (:name mailers
-	   :path "app/mailers/"        :exclude-re "^app/mailers/")
-    (:name specs
-	   :path "spec/"               :exclude-re "^spec/.+_spec\\.rb"
-	   :include-re "_spec\\.rb$" )
-    (:name libs
-	   :path "lib/"                :exclude-re "^lib/")
-    (:name javascripts
-	   :path "public/javascripts/" :exclude-re "^public/javascripts/")
-    (:name stylesheets
-	   :path "public/stylesheets/" :exclude-re "^public/stylesheets/")
+  '((:name models	:path "app/models/")
+    (:name views	:path "app/views/")
+    (:name controllers	:path "app/controllers/")
+    (:name helpers	:path "app/helpers/")
+    (:name mailers	:path "app/mailers/")
+    (:name specs	:path "spec/")
+    (:name libs		:path "lib/")
+    (:name javascripts	:path "public/javascripts/")
+    (:name stylesheets	:path "public/stylesheets/")
     ))
 
 (defvar helm-rails-other-files-exclude-regexp
-  (format "\\(%s\\).*\n" (mapconcat
-			   'identity
-			   (mapcar (lambda (plist)
-				     (plist-get plist :exclude-re))
-				   helm-rails-resources-schema)
-			   "\\|"))
+  (format "^\\(%s\\).*\n" (mapconcat
+			  'identity
+			  (mapcar (lambda (plist)
+				    (plist-get plist :path))
+				  helm-rails-resources-schema)
+			  "\\|"))
   )
+
 
 (defvar helm-rails-other-c-source
   '((name . "Other files")
     (disable-shortcuts)
     (init . (lambda ()
-	      (helm-init-candidates-in-buffer 'local (helm-rails-other-files))))
+	      (helm-init-candidates-in-buffer 'local
+					      (helm-rails-other-files))))
     (candidates-in-buffer)
     (help-message . helm-generic-file-help-message)
     (candidate-number-limit . 10)
@@ -84,14 +76,15 @@
     (type . file))
   )
 
-(defmacro helm-rails-def-c-source (name path &optional regexp)
+(defmacro helm-rails-def-c-source (name path)
   `(defvar ,(intern (format "helm-rails-%S-c-source" name))
      '((name . ,(format "%S" name))
        (disable-shortcuts)
        (init . (lambda ()
 		 (helm-init-candidates-in-buffer 'local
-						 (mapcar (lambda (c) (substring c (length ,path)))
-							 (helm-rails-files ,path ,regexp)))))
+						 (mapcar (lambda (c)
+							   (substring c (length ,path)))
+							 (helm-rails-files ,path)))))
        (candidates-in-buffer)
        (help-message . helm-generic-file-help-message)
        (candidate-number-limit . 10)
@@ -107,7 +100,8 @@
        (disable-shortcuts)
        (init . (lambda ()
   		 (helm-init-candidates-in-buffer 'local
-						 (helm-rails-current-scope-files (quote ,(intern (format "%S" name)))))))
+						 (helm-rails-current-scope-files
+						  (quote ,(intern (format "%S" name)))))))
        (candidates-in-buffer)
        (help-message . helm-generic-file-help-message)
        (candidate-number-limit . 10)
@@ -150,7 +144,7 @@
   "Returns root of the rails git project"
   (expand-file-name "../" (magit-git-dir)))
 
-;todo: this should return output from magit-git-output but grepped against REGEXP (but how?)
+					;todo: this should return output from magit-git-output but grepped against REGEXP (but how?)
 (defun helm-rails-files (path &optional regexp)
   "Returns a *list* of the files from supplied PATH and matched against supplied REGEXP"
   (let ((list (magit-split-lines (helm-rails-sub-magit-output path))))
@@ -206,8 +200,7 @@
 	  `(progn
 	     (helm-rails-def-c-source
 	      ,(plist-get resource :name)
-	      ,(plist-get resource :path)
-	      ,(plist-get resource :include-re))
+	      ,(plist-get resource :path))
 
 	     (helm-rails-def-current-scope-c-source
 	      ,(plist-get resource :name))
