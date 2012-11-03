@@ -1,6 +1,6 @@
 (expectations
  (desc "heml-rails-other-files-exclude-regepx"
-       (expect "^\\(app/models/\\|app/views/\\|app/controllers/\\|app/helpers/\\|app/mailers/\\|spec/.+_spec\\.rb\\|lib/\\|public/javascripts/\\|public/stylesheets/\\).*\n"
+       (expect "\\(^app/models/\\|^app/views/\\|^app/controllers/\\|^app/helpers/\\|^app/mailers/\\|^spec/.+_spec\\.rb\\|^lib/\\|^public/javascripts/\\|^public/stylesheets/\\).*\n"
 	       helm-rails-other-files-exclude-regexp)
        )
 

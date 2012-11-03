@@ -40,19 +40,29 @@
 (require 'inflections)
 
 (defvar helm-rails-resources-schema
-  '((:name models      :subpath "app/models/"         :exclude-re "app/models/")
-    (:name views       :subpath "app/views/"          :exclude-re "app/views/")
-    (:name controllers :subpath "app/controllers/"    :exclude-re "app/controllers/")
-    (:name helpers     :subpath "app/helpers/"        :exclude-re "app/helpers/")
-    (:name mailers     :subpath "app/mailers/"        :exclude-re "app/mailers/")
-    (:name specs       :subpath "spec/"               :exclude-re "spec/.+_spec\\.rb" :include-re "_spec\\.rb$" )
-    (:name libs	       :subpath "lib/"                :exclude-re "lib/")
-    (:name javascripts :subpath "public/javascripts/" :exclude-re "public/javascripts/")
-    (:name stylesheets :subpath "public/stylesheets/" :exclude-re "public/stylesheets/")
+  '((:name models
+	   :path "app/models/"         :exclude-re "^app/models/")
+    (:name views
+	   :path "app/views/"          :exclude-re "^app/views/")
+    (:name controllers
+	   :path "app/controllers/"    :exclude-re "^app/controllers/")
+    (:name helpers
+	   :path "app/helpers/"        :exclude-re "^app/helpers/")
+    (:name mailers
+	   :path "app/mailers/"        :exclude-re "^app/mailers/")
+    (:name specs
+	   :path "spec/"               :exclude-re "^spec/.+_spec\\.rb"
+	   :include-re "_spec\\.rb$" )
+    (:name libs
+	   :path "lib/"                :exclude-re "^lib/")
+    (:name javascripts
+	   :path "public/javascripts/" :exclude-re "^public/javascripts/")
+    (:name stylesheets
+	   :path "public/stylesheets/" :exclude-re "^public/stylesheets/")
     ))
 
 (defvar helm-rails-other-files-exclude-regexp
-  (format "^\\(%s\\).*\n" (mapconcat
+  (format "\\(%s\\).*\n" (mapconcat
 			   'identity
 			   (mapcar (lambda (plist)
 				     (plist-get plist :exclude-re))
@@ -196,7 +206,7 @@
 	  `(progn
 	     (helm-rails-def-c-source
 	      ,(plist-get resource :name)
-	      ,(plist-get resource :subpath)
+	      ,(plist-get resource :path)
 	      ,(plist-get resource :include-re))
 
 	     (helm-rails-def-current-scope-c-source
