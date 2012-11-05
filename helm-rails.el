@@ -146,10 +146,12 @@
   (expand-file-name "../" (magit-git-dir)))
 
 (defun helm-rails-current-file-relative-path ()
-  (substring (file-truename (buffer-file-name)) (length (helm-rails-root))))
+  (let ((file-name (buffer-file-name)))
+	(if file-name
+	    (substring (file-truename (buffer-file-name)) (length (helm-rails-root))))))
 
 
-;todo: this should return output from magit-git-output but grepped against REGEXP (but how?)
+;;todo: this should return output from magit-git-output but grepped against REGEXP (but how?)
 (defun helm-rails-files (path &optional regexp)
   "Returns a *list* of the files from supplied PATH and matched against supplied REGEXP"
   (let ((list (magit-split-lines (helm-rails-sub-magit-output path))))
@@ -160,13 +162,15 @@
 (defun helm-rails-sub-magit-output (&optional subpath)
   "Returns output of git ls-files from supplied SUBPATH called via magit.
 It excludes the currently visiting file"
-  (replace-regexp-in-string
-   (format "^%s\n" (helm-rails-current-file-relative-path))
-   ""
-   (magit-git-output `("ls-files"
-		      "--full-name"
-		      "--"
-		      ,(concat (helm-rails-root) subpath)))))
+  (let ((file-path (helm-rails-current-file-relative-path))
+	(output (magit-git-output `("ls-files"
+				    "--full-name"
+				    "--"
+				    ,(concat (helm-rails-root) subpath)))))
+    (if file-path
+	(replace-regexp-in-string (format "^%s\n" ) "" output)
+      output)
+    ))
 
 (defun helm-rails-other-files ()
   "Returns git output for all other files than the ones from `helm-rails-resources-schema'"
