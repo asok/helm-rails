@@ -168,7 +168,7 @@ It excludes the currently visiting file"
 				    "--"
 				    ,(concat (helm-rails-root) subpath)))))
     (if file-path
-	(replace-regexp-in-string (format "^%s\n" ) "" output)
+	(replace-regexp-in-string (format "^%s\n" file-path) "" output)
       output)
     ))
 
