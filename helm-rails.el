@@ -40,24 +40,24 @@
 (require 'inflections)
 
 (defvar helm-rails-resources-schema
-  '((:name models	:path "app/models/")
-    (:name views	:path "app/views/")
-    (:name controllers	:path "app/controllers/")
-    (:name helpers	:path "app/helpers/")
-    (:name mailers	:path "app/mailers/")
-    (:name specs	:path "spec/")
-    (:name libs		:path "lib/")
-    (:name javascripts	:path "public/javascripts/")
-    (:name stylesheets	:path "public/stylesheets/")
+  '((:name models	:re "app/models/"         :path "app/models/")
+    (:name views	:re "app/views/"          :path "app/views/")
+    (:name controllers	:re "app/controllers/"    :path "app/controllers/")
+    (:name helpers	:re "app/helpers/"        :path "app/helpers/")
+    (:name mailers	:re "app/mailers/"        :path "app/mailers/")
+    (:name specs	:re "spec/"               :path "spec/")
+    (:name libs		:re "lib/"                :path "lib/")
+    (:name javascripts	:re "public/javascripts/" :path "public/javascripts/")
+    (:name stylesheets	:re "public/stylesheets/" :path "public/stylesheets/")
     ))
 
 (defvar helm-rails-other-files-exclude-regexp
-  (format "^\\(%s\\).*\n" (mapconcat
-			  'identity
-			  (mapcar (lambda (plist)
-				    (plist-get plist :path))
-				  helm-rails-resources-schema)
-			  "\\|"))
+  (format "\\(%s\\).*" (mapconcat
+			'identity
+			(mapcar (lambda (plist)
+				  (plist-get plist :path))
+				helm-rails-resources-schema)
+			"\\|"))
   )
 
 (defvar helm-rails-other-c-source
@@ -75,21 +75,20 @@
     (type . file))
   )
 
-(defmacro helm-rails-def-c-source (name path)
+(defmacro helm-rails-def-c-source (name path regexp)
   `(defvar ,(intern (format "helm-rails-%S-c-source" name))
      '((name . ,(format "%S" name))
        (disable-shortcuts)
        (init . (lambda ()
 		 (helm-init-candidates-in-buffer
 		  'local
-		  (mapcar (lambda (c) (substring c (length ,path)))
-			  (helm-rails-files ,path)))))
+		  (helm-rails-files ,regexp))))
        (candidates-in-buffer)
        (help-message . helm-generic-file-help-message)
        (candidate-number-limit . 10)
        (mode-line . helm-generic-file-mode-line-string)
        (action . (lambda (c)
-		   (find-file (concat (helm-rails-root) ,path c))))
+		   (find-file (concat (helm-rails-root) c))))
        (type . file)))
   )
 
@@ -147,57 +146,45 @@
 
 (defun helm-rails-current-file-relative-path ()
   (let ((file-name (buffer-file-name)))
-	(if file-name
-	    (substring (file-truename (buffer-file-name)) (length (helm-rails-root))))))
+    (if file-name
+	(substring (file-truename (buffer-file-name)) (length (helm-rails-root))))))
 
+(defun helm-rails-all-files-args ()
+  (concat "git ls-files --full-name -- " (helm-rails-root)))
 
-;;todo: this should return output from magit-git-output but grepped against REGEXP (but how?)
-(defun helm-rails-files (path &optional regexp)
-  "Returns a *list* of the files from supplied PATH and matched against supplied REGEXP"
-  (let ((list (magit-split-lines (helm-rails-sub-magit-output path))))
-    (if regexp
-	(delete-if-not (lambda (c) (string-match-p regexp c)) list)
-      list)))
-
-(defun helm-rails-sub-magit-output (&optional subpath)
-  "Returns output of git ls-files from supplied SUBPATH called via magit.
+(defun helm-rails-files (regexp)
+  "Returns output of git ls-files grepped against given regexp.
 It excludes the currently visiting file"
   (let ((file-path (helm-rails-current-file-relative-path))
-	(output (magit-git-output `("ls-files"
-				    "--full-name"
-				    "--"
-				    ,(concat (helm-rails-root) subpath)))))
-    (if file-path
-	(replace-regexp-in-string (format "^%s\n" file-path) "" output)
-      output)
-    ))
+	(args (format "%s | egrep %s" (helm-rails-all-files-args) regexp)))
+    (shell-command-to-string (if file-path (concat args " | grep -v " file-path) args)
+     ))
+  )
 
 (defun helm-rails-other-files ()
   "Returns git output for all other files than the ones from `helm-rails-resources-schema'"
-  (replace-regexp-in-string
-   helm-rails-other-files-exclude-regexp
-   ""
-   (helm-rails-sub-magit-output)))
+  (shell-command-to-string
+   (concat (helm-rails-all-files-args) "| egrep -v " helm-rails-other-files-exclude-regexp)))
 
 (defun helm-rails-current-scope-files (target)
   (let ((current-resource (helm-rails-current-resource)))
     (if current-resource
-  	(apply
-	 'helm-rails-files
+  	(helm-rails-files
 	 (cond ((equal target 'models)
-		`("app/models/" ,(concat current-resource "\\.rb$")))
+		(format "app/models/%s\.rb" current-resource))
 	       ((equal target 'controllers)
-		`("app/controllers/" ,(concat (pluralize-string current-resource) "_controller\\.rb$")))
+	       	(format "app/controllers/%s_controller\.rb" (pluralize-string current-resource)))
 	       ((equal target 'helpers)
-		`("app/helpers/" ,(concat (pluralize-string current-resource) "_helper\\.rb$")))
+	       	(format "app/helpers/%s_helper\.rb" (pluralize-string current-resource)))
 	       ((equal target 'views)
-		`("app/views/" ,(concat (pluralize-string current-resource) "/[^/]+$")))
+	       	(format "app/views/\(.+/\)?%s/[^/]+$" (pluralize-string current-resource)))
 	       ((equal target 'specs)
-		`("spec/" ,(format "\\(%s_controller\\|%s\\|%s_helper\\)_spec\\.rb"
-				   (pluralize-string current-resource)
-				   current-resource
-				   (pluralize-string current-resource))))
-	       ))
+	       	(format "spec/.*\(%s_controller\|%s\|%s_helper\)_spec\.rb"
+			(pluralize-string current-resource)
+			current-resource
+			(pluralize-string current-resource)))
+	       )
+	 )
       '()
       )
     )
@@ -216,7 +203,8 @@ It excludes the currently visiting file"
 	  `(progn
 	     (helm-rails-def-c-source
 	      ,(plist-get resource :name)
-	      ,(plist-get resource :path))
+	      ,(plist-get resource :path)
+	      ,(plist-get resource :re))
 
 	     (helm-rails-def-current-scope-c-source
 	      ,(plist-get resource :name))
