@@ -21,8 +21,8 @@ There are no keybindings set. For example me, I'm using something like this:
 
 # Limitations
 
-* current scope c source may also grab something extra (to be fixed)
 * no notion of `tests/` and `app/assets/` directory (to implemented)
+* depends on `grep` and `sed` binaries
 
 # Contribution
 
