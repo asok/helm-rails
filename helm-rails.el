@@ -45,27 +45,12 @@
     (:name controllers	:re "^app/controllers/(.+)$"    :path "app/controllers/")
     (:name helpers	:re "^app/helpers/(.+)$"        :path "app/helpers/")
     (:name mailers	:re "^app/mailers/(.+)$"        :path "app/mailers/")
-    (:name specs	:re "^spec/(.+)$"               :path "spec/")
+    (:name specs	:re "^spec/(.+_spec\.rb)$"      :path "spec/")
     (:name libs		:re "^lib/(.+)$"                :path "lib/")
     (:name javascripts	:re "^public/javascripts/(.+)$" :path "public/javascripts/")
     (:name stylesheets	:re "^public/stylesheets/(.+)$" :path "public/stylesheets/")
     (:name all   	:re "^(.+)$"                    :path "")
     ))
-
-(defvar helm-rails-other-c-source
-  '((name . "Other files")
-    (disable-shortcuts)
-    (init . (lambda ()
-	      (helm-init-candidates-in-buffer 'local
-					      (helm-rails-other-files))))
-    (candidates-in-buffer)
-    (help-message . helm-generic-file-help-message)
-    (candidate-number-limit . 10)
-    (mode-line . helm-generic-file-mode-line-string)
-    (action . (lambda (c)
-		(find-file (concat (helm-rails-root) c))))
-    (type . file))
-  )
 
 (defmacro helm-rails-def-c-source (name path regexp)
   `(defvar ,(intern (format "helm-rails-%S-c-source" name))
@@ -77,7 +62,7 @@
 		  (helm-rails-seded-files ,regexp))))
        (candidates-in-buffer)
        (help-message . helm-generic-file-help-message)
-       (candidate-number-limit . 10)
+       (candidate-number-limit . 15)
        (mode-line . helm-generic-file-mode-line-string)
        (action . (lambda (c)
 		   (find-file (concat (helm-rails-root) ,path c))))
@@ -145,8 +130,7 @@
   (let ((file-path (helm-rails-current-file-relative-path))
 	 (args (format "git ls-files --full-name -- %s | %s" (helm-rails-root) command))
 	 (shell-file-name "/bin/bash"))
-     (shell-command-to-string (if file-path (concat args " | grep -v " file-path) args)
-			      )))
+     (shell-command-to-string (if file-path (concat args " | grep -v " file-path) args))))
 
 (defun helm-rails-seded-files (regexp)
   "Returns output of git ls-files sed-ed against given regexp.
