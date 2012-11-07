@@ -40,17 +40,38 @@
 (require 'inflections)
 
 (defvar helm-rails-resources-schema
-  '((:name models	:re "^app/models/(.+)$"         :path "app/models/")
-    (:name views	:re "^app/views/(.+)$"          :path "app/views/")
-    (:name controllers	:re "^app/controllers/(.+)$"    :path "app/controllers/")
-    (:name helpers	:re "^app/helpers/(.+)$"        :path "app/helpers/")
-    (:name mailers	:re "^app/mailers/(.+)$"        :path "app/mailers/")
-    (:name specs	:re "^spec/(.+_spec\.rb)$"      :path "spec/")
-    (:name libs		:re "^lib/(.+)$"                :path "lib/")
-    (:name javascripts	:re "^public/javascripts/(.+)$" :path "public/javascripts/")
-    (:name stylesheets	:re "^public/stylesheets/(.+)$" :path "public/stylesheets/")
-    (:name all   	:re "^(.+)$"                    :path "")
-    ))
+  '((:name models
+	   :re "^app/models/(.+)$"
+	   :path "app/models/")
+    (:name views
+	   :re "^app/views/(.+)$"
+	   :path "app/views/")
+    (:name controllers
+	   :re "^app/controllers/(.+)$"
+	   :path "app/controllers/")
+    (:name helpers
+	   :re "^app/helpers/(.+)$"
+	   :path "app/helpers/")
+    (:name mailers
+	   :re "^app/mailers/(.+)$"
+	   :path "app/mailers/")
+    (:name specs
+	   :re "^spec/(.+_spec\.rb)$"
+	   :path "spec/")
+    (:name libs
+	   :re "^lib/(.+)$"
+	   :path "lib/")
+    (:name javascripts
+	   :re "^(public/javascripts/.+|app/assets/javascripts/.+|lib/assets/javascripts/.+|vendor/assets/javascripts/.+)$"
+	   :path "")
+    (:name stylesheets
+	   :re "^(public/stylesheets/.+|app/assets/stylesheets/.+)$"
+	   :path "")
+    (:name all
+	   :re "^(.+)$"
+	   :path "")
+    )
+  )
 
 (defmacro helm-rails-def-c-source (name path regexp)
   `(defvar ,(intern (format "helm-rails-%S-c-source" name))
@@ -150,6 +171,10 @@ It excludes the currently visiting file."
   	(helm-rails-greped-files
 	 (cond ((equal target 'models)
 		(format "app/models/%s\.rb" current-resource))
+	       ((equal target 'javascripts)
+	       	(format "app/assets/javascripts/\\(.+/\\)?%s\\..+" (pluralize-string current-resource)))
+	       ((equal target 'stylesheets)
+	       	(format "app/assets/stylesheets/\\(.+/\\)?%s\\..+" (pluralize-string current-resource)))
 	       ((equal target 'controllers)
 	       	(format "app/controllers/\\(.+/\\)?%s_controller\\.rb" (pluralize-string current-resource)))
 	       ((equal target 'helpers)

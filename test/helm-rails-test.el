@@ -56,48 +56,57 @@
 		     (helm-rails-current-resource)))
        )
 
- ;; (desc "helm-rails-current-scope-files"
- (desc "finding controller from model"
-       (expect '("app/controllers/admin/users_controller.rb"
-		 "app/controllers/users_controller.rb")
-	       (find-file "app/models/user.rb")
-	       (magit-split-lines
-		(helm-rails-current-scope-files 'controllers))))
- (desc "finding model from controller"
-       (expect "app/models/user.rb\n"
-	       (find-file "app/controllers/users_controller.rb")
-	       (helm-rails-current-scope-files 'models)))
- (desc "finding model from namespaced controller"
-       (expect "app/models/user.rb\n"
-	       (find-file "app/controllers/admin/users_controller.rb")
-	       (helm-rails-current-scope-files 'models)))
- (desc "finding helper from controller"
-       (expect "app/helpers/users_helper.rb\n"
-	       (find-file "app/controllers/users_controller.rb")
-	       (helm-rails-current-scope-files 'helpers)))
- (desc "finding view from controller"
-       (expect '("app/views/users/index.html.erb"
-		 "app/views/users/show.html.erb")
-	       (find-file "app/controllers/users_controller.rb")
-	       (magit-split-lines
-		(helm-rails-current-scope-files 'views))))
- (desc "finding spec from controller"
-       (expect '("spec/controllers/users_controller_spec.rb"
-		 "spec/helpers/users_helper_spec.rb"
-		 "spec/models/user_spec.rb")
-	       (find-file "app/controllers/users_controller.rb")
-	       (magit-split-lines
-		(helm-rails-current-scope-files 'specs))))
- (desc "finding non-existant spec from controller"
-       (expect ""
-	       (find-file "app/controllers/people_controller.rb")
-	       (helm-rails-current-scope-files 'specs))
-       )
- (desc "finding spec from spec"
-       (expect '("spec/controllers/users_controller_spec.rb"
-		 "spec/helpers/users_helper_spec.rb")
-	       (find-file "spec/models/user_spec.rb")
-	       (magit-split-lines
-		(helm-rails-current-scope-files 'specs)))
+ (desc "helm-rails-current-scope-files"
+       (desc "finding controller from model"
+	     (expect '("app/controllers/admin/users_controller.rb"
+		       "app/controllers/users_controller.rb")
+		     (find-file "app/models/user.rb")
+		     (magit-split-lines
+		      (helm-rails-current-scope-files 'controllers))))
+       (desc "finding model from controller"
+	     (expect "app/models/user.rb\n"
+		     (find-file "app/controllers/users_controller.rb")
+		     (helm-rails-current-scope-files 'models)))
+       (desc "finding model from namespaced controller"
+	     (expect "app/models/user.rb\n"
+		     (find-file "app/controllers/admin/users_controller.rb")
+		     (helm-rails-current-scope-files 'models)))
+       (desc "finding helper from controller"
+	     (expect "app/helpers/users_helper.rb\n"
+		     (find-file "app/controllers/users_controller.rb")
+		     (helm-rails-current-scope-files 'helpers)))
+       (desc "finding view from controller"
+	     (expect '("app/views/users/index.html.erb"
+		       "app/views/users/show.html.erb")
+		     (find-file "app/controllers/users_controller.rb")
+		     (magit-split-lines
+		      (helm-rails-current-scope-files 'views))))
+       (desc "finding javascripts from controller"
+	     (expect "app/assets/javascripts/users.js.coffee.erb\n"
+		     (find-file "app/controllers/users_controller.rb")
+		      (helm-rails-current-scope-files 'javascripts)))
+       (desc "finding stylesheets from controller"
+	     (expect "app/assets/stylesheets/users.css.scss.erb\n"
+		     (find-file "app/controllers/users_controller.rb")
+		      (helm-rails-current-scope-files 'stylesheets)))
+       (desc "finding spec from controller"
+	     (expect '("spec/controllers/users_controller_spec.rb"
+		       "spec/helpers/users_helper_spec.rb"
+		       "spec/models/user_spec.rb")
+		     (find-file "app/controllers/users_controller.rb")
+		     (magit-split-lines
+		      (helm-rails-current-scope-files 'specs))))
+       (desc "finding non-existant spec from controller"
+	     (expect ""
+		     (find-file "app/controllers/people_controller.rb")
+		     (helm-rails-current-scope-files 'specs))
+	     )
+       (desc "finding spec from spec"
+	     (expect '("spec/controllers/users_controller_spec.rb"
+		       "spec/helpers/users_helper_spec.rb")
+		     (find-file "spec/models/user_spec.rb")
+		     (magit-split-lines
+		      (helm-rails-current-scope-files 'specs)))
+	     )
        )
  )
