@@ -83,7 +83,7 @@
 		  (helm-rails-seded-files ,regexp))))
        (candidates-in-buffer)
        (help-message . helm-generic-file-help-message)
-       (candidate-number-limit . 15)
+       (candidate-number-limit . 30)
        (mode-line . helm-generic-file-mode-line-string)
        (action . (lambda (c)
 		   (find-file (concat (helm-rails-root) ,path c))))
@@ -216,23 +216,6 @@ It excludes the currently visiting file."
 	      ,(plist-get resource :name) ))
 	  )
       )
-
-(defun helm-rails-all ()
-  "Search for all files in the rails project"
-  (interactive)
-  (unless (helm-rails-project-p)
-    (error "Not inside a rails git repository"))
-  (helm :sources '(helm-rails-models-c-source
-		   helm-rails-views-c-source
-		   helm-rails-controllers-c-source
-		   helm-rails-helpers-c-source
-		   helm-rails-libs-c-source
-		   helm-rails-specs-c-source
-		   helm-rails-javascripts-c-source
-		   helm-rails-stylesheets-c-source
-		   helm-rails-all-c-source)
-	)
-  )
 
 (provide 'helm-rails)
 
