@@ -128,10 +128,10 @@
 	(singularize-string
 	 (catch 'break (loop
 			for re in '("app/models/\\(.+\\)\\.rb$"
-				    "/\\([a-z]+\\)_controller\\.rb$"
+				    "/\\([a-z_]+\\)_controller\\.rb$"
 				    "app/views/\\(.+\\)/[^/]+$"
 				    "app/helpers/\\(.+\\)_helper\\.rb$"
-				    "spec/.*/\\([a-z]+\\)\\(_controller\\)?_spec\\.rb$")
+				    "spec/.*/\\([a-z_]+\\)\\(_controller\\)?_spec\\.rb$")
 			do (if (string-match re file-name)
 			       (throw 'break (match-string 1 file-name)))
 			))))

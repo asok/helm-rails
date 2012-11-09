@@ -21,7 +21,7 @@ There are no keybindings set. For example me, I'm using something like this:
 
 # Limitations
 
-* no notion of `tests/` and directory (to implemented)
+* no notion of `tests/` directory (to implemented)
 * depends on `git`, `grep` and `sed` binaries
 
 # Contribution
