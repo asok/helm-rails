@@ -2,10 +2,11 @@
 
 ;; Copyright (C) 2012 Adam Sokolnicki
 
-;; Author   : Adam Sokolnicki <adam.sokolnicki@gmail.com>
-;; URL      : https://github.com/asok/helm-rails
-;; Version  : 0.1
-;; Keywords : helm, rails, git
+;; Author:            Adam Sokolnicki <adam.sokolnicki@gmail.com>
+;; URL:               https://github.com/asok/helm-rails
+;; Version:           0.1
+;; Keywords:          helm, rails, git
+;; Package-Requires:  ((helm magit inflections))
 
 ;; This file is NOT part of GNU Emacs.
 
