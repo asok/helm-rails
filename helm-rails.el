@@ -212,20 +212,10 @@ It excludes the currently visiting file."
 	     (helm-rails-def-current-scope-c-source
 	      ,(plist-get resource :name))
 
-;;;###autoload (autoload 'helm-rails-models "helm-rails" "" t)
 	     (helm-rails-def-command
 	      ,(plist-get resource :name) ))
 	  )
       )
-
-;; ;;;###autoload
-;; (defun helm-rails-autoload ()
-;;   (loop for resource in helm-rails-resources-schema
-;;         do (autoload
-;;              (intern (format "helm-rails-%S" (plist-get resource :name)))
-;;                      "helm-rails"
-;;                      ""
-;;                      t)))
 
 (provide 'helm-rails)
 
