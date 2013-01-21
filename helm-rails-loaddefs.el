@@ -9,5 +9,3 @@
                     styleshetts
                     all)
       do (autoload (intern (format "helm-rails-%S" name)) "helm-rails" nil t))
-
-(provide 'helm-rails-loaddefs)
