@@ -9,7 +9,7 @@ You can find any files that are tracked by git. There are commands `helm-rails-*
 Clone the repository somewhere on your hard drive. And add this to your emacs setup:
 
 	(add-to-list 'load-path "/path/to/helm-rails/")
-	(require 'helm-rails)
+	(require 'helm-rails-loaddefs)
 
 There are no keybindings set. For example me, I'm using something like this:
 
