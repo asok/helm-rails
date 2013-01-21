@@ -221,10 +221,10 @@ It excludes the currently visiting file."
 (defun helm-rails-autoload ()
   (loop for resource in helm-rails-resources-schema
         do (autoload
-             (intern (format "helm-rails-%S" (plist-get resource :name))
+             (intern (format "helm-rails-%S" (plist-get resource :name)))
                      "helm-rails"
                      ""
-                     t))))
+                     t)))
 
 (provide 'helm-rails)
 
