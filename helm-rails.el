@@ -219,26 +219,12 @@ It excludes the currently visiting file."
 
 ;;;###autoload
 (defun helm-rails-autoload ()
-  (message "MADE IT!!!---!!!!")
-  (autoload 'helm-rails-models      "helm-rails" "" t)
-  (autoload 'helm-rails-views       "helm-rails" "" t)
-  (autoload 'helm-rails-controllers "helm-rails" "" t)
-  (autoload 'helm-rails-helpers     "helm-rails" "" t)
-  (autoload 'helm-rails-mailers     "helm-rails" "" t)
-  (autoload 'helm-rails-specs       "helm-rails" "" t)
-  (autoload 'helm-rails-libs        "helm-rails" "" t)
-  (autoload 'helm-rails-javascripts "helm-rails" "" t)
-  (autoload 'helm-rails-stylesheets "helm-rails" "" t)
-  (autoload 'helm-rails-all         "helm-rails" "" t))
-
-;; ;;;###autoload
-;; (defun helm-rails-autoload ()
-;;   (loop for resource in helm-rails-resources-schema
-;;         do (autoload
-;;              (intern (format "helm-rails-%S" (plist-get resource :name))
-;;                      "helm-rails"
-;;                      ""
-;;                      t))))
+  (loop for resource in helm-rails-resources-schema
+        do (autoload
+             (intern (format "helm-rails-%S" (plist-get resource :name))
+                     "helm-rails"
+                     ""
+                     t))))
 
 (provide 'helm-rails)
 
