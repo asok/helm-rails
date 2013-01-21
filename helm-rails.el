@@ -150,9 +150,9 @@
 
 (defun helm-rails-git-output (command)
   (let ((file-path (helm-rails-current-file-relative-path))
-	 (args (format "git ls-files --full-name -- %s | %s" (helm-rails-root) command))
-	 (shell-file-name "/bin/bash"))
-     (shell-command-to-string (if file-path (concat args " | grep -v " file-path) args))))
+        (args (format "git ls-files --full-name -- %s | %s" (helm-rails-root) command))
+        (shell-file-name "/bin/bash"))
+    (shell-command-to-string (if file-path (concat args " | grep -v " file-path) args))))
 
 (defun helm-rails-seded-files (regexp)
   "Returns output of git ls-files sed-ed against given regexp.
@@ -201,8 +201,7 @@ It excludes the currently visiting file."
 		      "environment.rb" (expand-file-name "../config" (magit-git-dir))))
     (error nil)))
 
-(loop for resource in
-      helm-rails-resources-schema
+(loop for resource in helm-rails-resources-schema
       do (eval
 	  `(progn
 	     (helm-rails-def-c-source
@@ -217,6 +216,29 @@ It excludes the currently visiting file."
 	      ,(plist-get resource :name) ))
 	  )
       )
+
+;;;###autoload
+(defun helm-rails-autoload ()
+  (message "MADE IT!!!---!!!!")
+  (autoload 'helm-rails-models      "helm-rails" "" t)
+  (autoload 'helm-rails-views       "helm-rails" "" t)
+  (autoload 'helm-rails-controllers "helm-rails" "" t)
+  (autoload 'helm-rails-helpers     "helm-rails" "" t)
+  (autoload 'helm-rails-mailers     "helm-rails" "" t)
+  (autoload 'helm-rails-specs       "helm-rails" "" t)
+  (autoload 'helm-rails-libs        "helm-rails" "" t)
+  (autoload 'helm-rails-javascripts "helm-rails" "" t)
+  (autoload 'helm-rails-stylesheets "helm-rails" "" t)
+  (autoload 'helm-rails-all         "helm-rails" "" t))
+
+;; ;;;###autoload
+;; (defun helm-rails-autoload ()
+;;   (loop for resource in helm-rails-resources-schema
+;;         do (autoload
+;;              (intern (format "helm-rails-%S" (plist-get resource :name))
+;;                      "helm-rails"
+;;                      ""
+;;                      t))))
 
 (provide 'helm-rails)
 
