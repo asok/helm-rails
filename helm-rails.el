@@ -150,7 +150,7 @@
 
 (defun helm-rails-git-output (command)
   (let ((file-path (helm-rails-current-file-relative-path))
-	 (args (format "git ls-files --full-name -- %s | %s" (helm-rails-root) command))
+	 (args (format "git ls-files --others --full-name -- %s | %s" (helm-rails-root) command))
 	 (shell-file-name "/bin/bash"))
      (shell-command-to-string (if file-path (concat args " | grep -v " file-path) args))))
 
