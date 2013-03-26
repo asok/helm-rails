@@ -6,6 +6,12 @@ You can find any files that are tracked by git. There are commands `helm-rails-*
 
 # Installation
 
+### el-get
+
+Just do`M-x el-get-install RET helm-rails RET`.
+
+### Manual
+
 Clone the repository somewhere on your hard drive. And add this to your emacs setup:
 
 	(add-to-list 'load-path "/path/to/helm-rails/")
