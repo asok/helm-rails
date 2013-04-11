@@ -6,7 +6,7 @@
 ;; URL:               https://github.com/asok/helm-rails
 ;; Version:           0.1
 ;; Keywords:          helm, rails, git
-;; Package-Requires:  ((helm magit inflections))
+;; Package-Requires:  ((helm "1.5.1") (magit "1.2.0") (inflections "1.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
