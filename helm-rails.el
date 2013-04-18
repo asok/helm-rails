@@ -80,7 +80,7 @@
 (defmacro helm-rails-def-c-source (name path regexp)
   `(defvar ,(intern (format "helm-rails-%S-c-source" name))
      '((name . ,(format "%S" name))
-       (path . ,(format "%s" path))
+       (helm-rails-relative-path . ,(format "%s" path))
        (init . (lambda ()
 		 (helm-init-candidates-in-buffer
 		  'local
@@ -97,7 +97,7 @@
 (defmacro helm-rails-def-current-scope-c-source (name)
   `(defvar ,(intern (format "helm-rails-current-scope-%S-c-source" name))
      '((name . "current scope")
-       (path . "")
+       (helm-rails-relative-path . "")
        (init . (lambda ()
   		 (helm-init-candidates-in-buffer 'local
 						 (helm-rails-current-scope-files
@@ -150,7 +150,7 @@
         collect
         (cons
          (propertize (cdr i) 'face 'helm-ff-file)
-         (expand-file-name (concat (assoc-default 'path source) (cdr i)) root))))
+         (expand-file-name (concat (assoc-default 'helm-rails-relative-path source) (cdr i)) root))))
 
 (defun helm-rails-root ()
   "Returns root of the rails git project"
