@@ -82,7 +82,7 @@
 (defmacro helm-rails-def-c-source (name path regexp)
   `(defvar ,(intern (format "helm-rails-%S-c-source" name))
      '((name . ,(format "%S" name))
-       (disable-shortcuts)
+       (path . ,(format "%s" path))
        (init . (lambda ()
 		 (helm-init-candidates-in-buffer
 		  'local
@@ -91,15 +91,15 @@
        (help-message . helm-generic-file-help-message)
        (candidate-number-limit . 30)
        (mode-line . helm-generic-file-mode-line-string)
-       (action . (lambda (c)
-		   (find-file (concat (helm-rails-root) ,path c))))
+       (filtered-candidate-transformer . helm-rails-transformer)
+       (action . ,(cdr (helm-get-actions-from-type helm-source-locate)))
        (type . file)))
   )
 
 (defmacro helm-rails-def-current-scope-c-source (name)
   `(defvar ,(intern (format "helm-rails-current-scope-%S-c-source" name))
      '((name . "current scope")
-       (disable-shortcuts)
+       (path . "")
        (init . (lambda ()
   		 (helm-init-candidates-in-buffer 'local
 						 (helm-rails-current-scope-files
@@ -108,8 +108,8 @@
        (help-message . helm-generic-file-help-message)
        (candidate-number-limit . 10)
        (mode-line . helm-generic-file-mode-line-string)
-       (action . (lambda (c)
-  		   (find-file (concat (helm-rails-root) c))))
+       (filtered-candidate-transformer . helm-rails-transformer)
+       (action . ,(cdr (helm-get-actions-from-type helm-source-locate)))
        (type . file)))
   )
 
@@ -146,17 +146,24 @@
     )
   )
 
+(defun helm-rails-transformer (candidates source)
+  (loop with root = (helm-rails-root)
+        for i in candidates
+        collect
+        (cons
+         (propertize (cdr i) 'face 'helm-ff-file)
+         (expand-file-name (concat (assoc-default 'path source) (cdr i)) root))))
+
 (defun helm-rails-root ()
   "Returns root of the rails git project"
   (expand-file-name "../" (magit-git-dir)))
 
-(defun helm-rails-current-file-relative-path ()
-  (let ((file-name (buffer-file-name)))
-    (if file-name
-	(substring (file-truename (buffer-file-name)) (length (helm-rails-root))))))
+(defun helm-rails-file-relative-path (file-name)
+  (if file-name
+      (substring (file-truename file-name) (length (helm-rails-root)))))
 
 (defun helm-rails-git-output (command)
-  (let ((file-path (helm-rails-current-file-relative-path))
+  (let ((file-path (helm-rails-file-relative-path (buffer-file-name)))
 	 (args (format "git ls-files --full-name -- %s | %s" (helm-rails-root) command))
 	 (shell-file-name "/bin/bash"))
      (shell-command-to-string (if file-path (concat args " | grep -v " file-path) args))))
