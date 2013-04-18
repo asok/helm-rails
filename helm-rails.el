@@ -6,7 +6,7 @@
 ;; URL:               https://github.com/asok/helm-rails
 ;; Version:           0.1
 ;; Keywords:          helm, rails, git
-;; Package-Requires:  ((helm "1.5.1") (magit "1.2.0") (inflections "1.1"))
+;; Package-Requires:  ((helm "1.5.1") (inflections "1.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -30,14 +30,12 @@
 ;;; Commentary:
 ;;
 ;; Helm Rails extension provides snappy navigation through rails
-;; projects. It is depending on magit for quering Git binary
-;; for a list of candidates. It is possible to traverse through
+;; projects. It is possible to traverse through
 ;; resource and files related to the current file.
 ;;
 ;;; Code:
 
 (require 'helm)
-(require 'magit)
 (require 'inflections)
 
 (defvar helm-rails-resources-schema
@@ -156,7 +154,8 @@
 
 (defun helm-rails-root ()
   "Returns root of the rails git project"
-  (expand-file-name "../" (magit-git-dir)))
+  (let ((root (locate-dominating-file default-directory ".git")))
+    (and root (file-name-as-directory root))))
 
 (defun helm-rails-file-relative-path (file-name)
   (if file-name
@@ -211,8 +210,7 @@ It excludes the currently visiting file."
 (defun helm-rails-project-p ()
   "Returns t if we are inside a rails git repository"
   (condition-case nil
-      (file-exists-p (expand-file-name
-		      "environment.rb" (expand-file-name "../config" (magit-git-dir))))
+      (file-exists-p (expand-file-name "config/environment.rb" (helm-rails-root)))
     (error nil)))
 
 (loop for resource in
