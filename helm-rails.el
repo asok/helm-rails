@@ -74,6 +74,11 @@
     )
   )
 
+(defvar helm-rails-not-found-c-source
+  '((name . "Run helm-rails-all")
+    (dummy)
+    (action . (lambda (c) (helm-rails-all c)))))
+
 (defmacro helm-rails-def-c-source (name path regexp)
   `(defvar ,(intern (format "helm-rails-%S-c-source" name))
      '((name . ,(format "%S" name))
@@ -109,7 +114,7 @@
   )
 
 (defmacro helm-rails-def-command (name)
-  `(defun ,(intern (format "helm-rails-%S" name)) ()
+  `(defun ,(intern (format "helm-rails-%S" name)) (&optional input)
      ,(format "Search for %S" name)
      (interactive)
      (unless (helm-rails-project-p)
@@ -117,7 +122,9 @@
      (helm :sources (list
 		     ,(intern (format "helm-rails-current-scope-%S-c-source" name))
 		     ,(intern (format "helm-rails-%S-c-source" name))
+                     ,(unless (string= "all" name) 'helm-rails-not-found-c-source)
 		     )
+           :input input
 	   :prompt ,(format "%S: " name))
      )
   )
