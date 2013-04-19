@@ -25,10 +25,6 @@ There are no keybindings set. For example me, I'm using something like this:
 	(define-key global-map (kbd "s-o") 'helm-rails-specs)
 	(define-key global-map (kbd "s-r") 'helm-rails-all)
 
-# Helm configuration
-
-Variable `helm-ff-transformer-show-only-basename` when set to `t` as you can imagine will truncate a filename to basename. I don't find it useful with `helm-rails`. Hence I set it to `nil` with `(setq helm-ff-transformer-show-only-basename nil)`.
-
 # Limitations
 
 * no notion of `tests/` directory (to implemented)
