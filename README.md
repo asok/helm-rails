@@ -39,5 +39,5 @@ Install [carton](https://github.com/rejeep/carton) if you haven't already, then:
 	
 Run all tests with:
 
-	$ carton exec make
+	$ make test
 	
