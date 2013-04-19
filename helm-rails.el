@@ -213,22 +213,17 @@ It excludes the currently visiting file."
       (file-exists-p (expand-file-name "config/environment.rb" (helm-rails-root)))
     (error nil)))
 
-(loop for resource in
-      helm-rails-resources-schema
-      do (eval
-	  `(progn
-	     (helm-rails-def-c-source
-	      ,(plist-get resource :name)
-	      ,(plist-get resource :path)
-	      ,(plist-get resource :re))
+(defun helm-rails-def-resource (name path re)
+  (eval
+   `(progn
+      (helm-rails-def-c-source ,name ,path ,re)
+      (helm-rails-def-current-scope-c-source ,name)
+      (helm-rails-def-command ,name))))
 
-	     (helm-rails-def-current-scope-c-source
-	      ,(plist-get resource :name))
-
-	     (helm-rails-def-command
-	      ,(plist-get resource :name) ))
-	  )
-      )
+(loop for resource in helm-rails-resources-schema
+      do (helm-rails-def-resource (plist-get resource :name)
+                                  (plist-get resource :path)
+                                  (plist-get resource :re)))
 
 (provide 'helm-rails)
 

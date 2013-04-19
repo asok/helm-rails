@@ -1,4 +1,13 @@
 (expectations
+ (desc "helm-rails-def-resource"
+       (expect '(t t t)
+               (helm-rails-def-resource 'jobs "app/jobs/" "^app/jobs/(.+)$")
+               (list
+                (fboundp 'helm-rails-jobs)
+                (boundp 'helm-rails-current-scope-jobs-c-source)
+                (boundp 'helm-rails-jobs-c-source)))
+       )
+
  (desc "helm-rails-current-file-relative-path"
        (expect "spec/models/user_spec.rb"
 	       (find-file "spec/models/user_spec.rb")

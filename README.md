@@ -30,6 +30,16 @@ There are no keybindings set. For example me, I'm using something like this:
 * no notion of `tests/` directory (to implemented)
 * depends on `git`, `grep` and `sed` binaries
 
+# Tricks
+
+### Defining a new resource
+
+For example if you store your `Delayed::Job` jobs under `app/jobs/` directory you can do something like this to create a new command `helm-rails-jobs`:
+
+    (helm-rails-def-resource 'jobs "app/jobs/" "^app/jobs/(.+)$")
+
+The first argument will be the suffix of the name of the command. Second argument is the relative path to the directory where the files are stored. And the third argument is the regular expression for to find the files (note: it is a bash regular expression).
+
 # Contribution
 
 Install [carton](https://github.com/rejeep/carton) if you haven't already, then:
