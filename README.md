@@ -3,6 +3,7 @@
 helm-rails is an extension for [helm](https://github.com/emacs-helm/helm) for working with Rails project. It is borrowing idea from [helm-git](https://github.com/maio/helm-git) that is asking git for a list of candidates.
 
 You can find any files that are tracked by git. There are commands `helm-rails-*` (like `helm-rails-models`) for traversing resources. And there are also `helm-rails-current-scope-*-c-source` that show files that are revelant to the buffer's filename.
+It is possible to grep each of the resources with `helm-rails-grep-*` (like `helm-rails-grep-models`).
 
 # Installation
 

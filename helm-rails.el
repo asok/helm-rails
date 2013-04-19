@@ -38,35 +38,51 @@
 (require 'helm-locate)
 (require 'inflections)
 
+(defcustom helm-rails-default-grep-exts
+  '("*.rb" "*.html" "*.js" "*.erb" "*.haml" "*.slim" "*.yml" "*.yaml" "*.json" "*.coffee")
+  "Extenstions of files to look in when calling `helm-rails-do-grep'"
+  :group 'helm-rails
+  :type '(repeat string))
+
 (defvar helm-rails-resources-schema
   '((:name models
+           :exts '("*.rb")
 	   :re "^app/models/(.+)$"
 	   :path "app/models/")
     (:name views
+           :exts '("*.rb" "*.html" "*.js" "*.erb" "*.haml" "*.slim" "*.json" "*.coffee")
 	   :re "^app/views/(.+)$"
 	   :path "app/views/")
     (:name controllers
+           :exts '("*.rb")
 	   :re "^app/controllers/(.+)$"
 	   :path "app/controllers/")
     (:name helpers
+           :exts '("*.rb")
 	   :re "^app/helpers/(.+)$"
 	   :path "app/helpers/")
     (:name mailers
+           :exts '("*.rb")
 	   :re "^app/mailers/(.+)$"
 	   :path "app/mailers/")
     (:name specs
+           :exts '("*.rb")
 	   :re "^spec/(.+_spec\.rb)$"
 	   :path "spec/")
     (:name libs
+           :exts '("*.rb")
 	   :re "^lib/(.+)$"
 	   :path "lib/")
     (:name javascripts
+           :exts '("*.js" "*.coffee")
 	   :re "^(public/javascripts/.+|app/assets/javascripts/.+|lib/assets/javascripts/.+|vendor/assets/javascripts/.+)$"
 	   :path "")
     (:name stylesheets
+           :exts '("*.css" "*.scss" "*.sass")
 	   :re "^(public/stylesheets/.+|app/assets/stylesheets/.+)$"
 	   :path "")
     (:name all
+           :exts helm-rails-default-grep-exts
 	   :re "^(.+)$"
 	   :path "")
     )
@@ -127,20 +143,26 @@
      )
   )
 
+(defmacro helm-rails-def-grep-command (name path exts)
+  `(defun ,(intern (format "helm-rails-grep-%S" name)) ()
+     ,(format "Grep %S" name)
+     (interactive)
+     (helm-do-grep-1
+      (list (concat (helm-rails-root) ,path)) t nil ,exts )))
+
 (defun helm-rails-current-resource ()
   "Returns a resource name extracted from the name of the currently visiting file"
   (let ((file-name (buffer-file-name)))
     (if file-name
-	(singularize-string
-	 (catch 'break (loop
-			for re in '("app/models/\\(.+\\)\\.rb$"
-				    "/\\([a-z_]+\\)_controller\\.rb$"
-				    "app/views/\\(.+\\)/[^/]+$"
-				    "app/helpers/\\(.+\\)_helper\\.rb$"
-				    "spec/.*/\\([a-z_]+?\\)\\(_controller\\)?_spec\\.rb$")
-			do (if (string-match re file-name)
-			       (throw 'break (match-string 1 file-name)))
-			))))
+        (singularize-string
+         (catch 'break (loop
+                        for re in '("app/models/\\(.+\\)\\.rb$"
+                                    "/\\([a-z_]+\\)_controller\\.rb$"
+                                    "app/views/\\(.+\\)/[^/]+$"
+                                    "app/helpers/\\(.+\\)_helper\\.rb$"
+                                    "spec/.*/\\([a-z_]+?\\)\\(_controller\\)?_spec\\.rb$")
+                        do (if (string-match re file-name)
+                               (throw 'break (match-string 1 file-name)))))))
     )
   )
 
@@ -163,9 +185,9 @@
 
 (defun helm-rails-git-output (command)
   (let ((file-path (helm-rails-file-relative-path (buffer-file-name)))
-	 (args (format "git ls-files --full-name -- %s | %s" (helm-rails-root) command))
-	 (shell-file-name "/bin/bash"))
-     (shell-command-to-string (if file-path (concat args " | grep -v " file-path) args))))
+        (args (format "git ls-files --full-name -- %s | %s" (helm-rails-root) command))
+        (shell-file-name "/bin/bash"))
+    (shell-command-to-string (if file-path (concat args " | grep -v " file-path) args))))
 
 (defun helm-rails-seded-files (regexp)
   "Returns output of git ls-files sed-ed against given regexp.
@@ -182,26 +204,26 @@ It excludes the currently visiting file."
 (defun helm-rails-current-scope-files (target)
   (let ((current-resource (helm-rails-current-resource)))
     (if current-resource
-  	(helm-rails-greped-files
-	 (cond ((equal target 'models)
-		(format "app/models/%s\.rb" current-resource))
-	       ((equal target 'javascripts)
-	       	(format "app/assets/javascripts/\\(.+/\\)?%s\\..+" (pluralize-string current-resource)))
-	       ((equal target 'stylesheets)
-	       	(format "app/assets/stylesheets/\\(.+/\\)?%s\\..+" (pluralize-string current-resource)))
-	       ((equal target 'controllers)
-	       	(format "app/controllers/\\(.+/\\)?%s_controller\\.rb" (pluralize-string current-resource)))
-	       ((equal target 'helpers)
-	       	(format "app/helpers/%s_helper\.rb" (pluralize-string current-resource)))
-	       ((equal target 'views)
-	       	(format "app/views/\\(.+/\\)?%s/[^/]+" (pluralize-string current-resource)))
-	       ((equal target 'specs)
-	       	(format "spec/.*\\(%s_controller\\|%s\\|%s_helper\\)_spec\\.rb"
-			(pluralize-string current-resource)
-			current-resource
-			(pluralize-string current-resource)))
-	       )
-	 )
+        (helm-rails-greped-files
+         (cond ((equal target 'models)
+                (format "app/models/%s\.rb" current-resource))
+               ((equal target 'javascripts)
+                (format "app/assets/javascripts/\\(.+/\\)?%s\\..+" (pluralize-string current-resource)))
+               ((equal target 'stylesheets)
+                (format "app/assets/stylesheets/\\(.+/\\)?%s\\..+" (pluralize-string current-resource)))
+               ((equal target 'controllers)
+                (format "app/controllers/\\(.+/\\)?%s_controller\\.rb" (pluralize-string current-resource)))
+               ((equal target 'helpers)
+                (format "app/helpers/%s_helper\.rb" (pluralize-string current-resource)))
+               ((equal target 'views)
+                (format "app/views/\\(.+/\\)?%s/[^/]+" (pluralize-string current-resource)))
+               ((equal target 'specs)
+                (format "spec/.*\\(%s_controller\\|%s\\|%s_helper\\)_spec\\.rb"
+                        (pluralize-string current-resource)
+                        current-resource
+                        (pluralize-string current-resource)))
+               )
+         )
       '()
       )
     )
@@ -213,17 +235,19 @@ It excludes the currently visiting file."
       (file-exists-p (expand-file-name "config/environment.rb" (helm-rails-root)))
     (error nil)))
 
-(defun helm-rails-def-resource (name path re)
+(defun helm-rails-def-resource (name path re &optional exts)
   (eval
    `(progn
       (helm-rails-def-c-source ,name ,path ,re)
       (helm-rails-def-current-scope-c-source ,name)
-      (helm-rails-def-command ,name))))
+      (helm-rails-def-command ,name)
+      (helm-rails-def-grep-command ,name ,path (or ,exts helm-rails-default-grep-exts)))))
 
 (loop for resource in helm-rails-resources-schema
       do (helm-rails-def-resource (plist-get resource :name)
                                   (plist-get resource :path)
-                                  (plist-get resource :re)))
+                                  (plist-get resource :re)
+                                  (plist-get resource :exts)))
 
 (provide 'helm-rails)
 

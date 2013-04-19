@@ -1,11 +1,12 @@
 (expectations
  (desc "helm-rails-def-resource"
-       (expect '(t t t)
+       (expect '(t t t t)
                (helm-rails-def-resource 'jobs "app/jobs/" "^app/jobs/(.+)$")
                (list
                 (fboundp 'helm-rails-jobs)
                 (boundp 'helm-rails-current-scope-jobs-c-source)
-                (boundp 'helm-rails-jobs-c-source)))
+                (boundp 'helm-rails-jobs-c-source)
+                (fboundp 'helm-rails-grep-jobs)))
        )
 
  (desc "helm-rails-current-file-relative-path"
