@@ -35,7 +35,7 @@
 ;;
 ;;; Code:
 
-(require 'helm)
+(require 'helm-locate)
 (require 'inflections)
 
 (defvar helm-rails-resources-schema
