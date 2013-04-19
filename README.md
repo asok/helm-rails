@@ -8,7 +8,7 @@ You can find any files that are tracked by git. There are commands `helm-rails-*
 
 ### el-get
 
-Just do`M-x el-get-install RET helm-rails RET`.
+Just do `M-x el-get-install RET helm-rails RET`.
 
 ### Manual
 

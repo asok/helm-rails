@@ -155,11 +155,11 @@
 (defun helm-rails-root ()
   "Returns root of the rails git project"
   (let ((root (locate-dominating-file default-directory ".git")))
-    (and root (file-name-as-directory root))))
+    (and root (file-name-as-directory (file-truename root)))))
 
 (defun helm-rails-file-relative-path (file-name)
-  (if file-name
-      (substring (file-truename file-name) (length (helm-rails-root)))))
+  (when file-name
+    (substring (file-truename file-name) (length (helm-rails-root)))))
 
 (defun helm-rails-git-output (command)
   (let ((file-path (helm-rails-file-relative-path (buffer-file-name)))
