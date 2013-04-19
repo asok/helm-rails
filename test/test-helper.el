@@ -1,3 +1,5 @@
+(require 'magit)
+
  ;; stolen from https://github.com/maio/helm-git/blob/master/tests/test-helpers.el
 (defmacro with-temp-git-repo (repo &rest body)
   (declare (indent 1) (debug t))

@@ -1,9 +1,6 @@
-#!/usr/bin/env emacs --script
-
 (let ((current-directory (file-name-directory load-file-name)))
   (setq helm-rails-test-path (expand-file-name "." current-directory))
   (setq helm-rails-root-path (expand-file-name ".." current-directory))
-  ;; (setq helm-rails-test-app-path (concat helm-rails-test-path "/test-app/"))
   (add-to-list 'load-path helm-rails-root-path)
   (add-to-list 'load-path helm-rails-test-path)
   (load (expand-file-name "test-helper.el" helm-rails-test-path) nil t))
@@ -11,8 +8,7 @@
 (require 'helm-rails)
 (require 'ert-expectations)
 
-(dolist (test-file (or command-line-args-left (directory-files (expand-file-name ".") t "-test.el$")))
-  (load test-file nil t))
+(load (expand-file-name "helm-rails-test.el" helm-rails-test-path) nil t)
 
 (with-temp-git-repo repo
 		    (loop for directory in '("app/"

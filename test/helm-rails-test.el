@@ -2,7 +2,7 @@
  (desc "helm-rails-current-file-relative-path"
        (expect "spec/models/user_spec.rb"
 	       (find-file "spec/models/user_spec.rb")
-	       (helm-rails-current-file-relative-path))
+	       (helm-rails-file-relative-path (buffer-file-name)))
        )
 
  (desc "helm-rails-seded-files"
