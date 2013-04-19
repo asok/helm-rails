@@ -40,7 +40,7 @@
 
 (defcustom helm-rails-default-grep-exts
   '("*.rb" "*.html" "*.js" "*.erb" "*.haml" "*.slim" "*.yml" "*.yaml" "*.json" "*.coffee")
-  "Extenstions of files to look in when calling `helm-rails-do-grep'"
+  "Extenstions of files to look in when greping whole project with `helm-rails-grep-all'"
   :group 'helm-rails
   :type '(repeat string))
 
