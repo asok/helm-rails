@@ -4,7 +4,7 @@
 
 ;; Author:            Adam Sokolnicki <adam.sokolnicki@gmail.com>
 ;; URL:               https://github.com/asok/helm-rails
-;; Version:           0.1
+;; Version:           0.2
 ;; Keywords:          helm, rails, git
 ;; Package-Requires:  ((helm "1.5.1") (inflections "1.1"))
 
@@ -44,13 +44,31 @@
   :group 'helm-rails
   :type '(repeat string))
 
+(defcustom helm-rails-views-grep-exts
+  '("*.rb" "*.html" "*.js" "*.erb" "*.haml" "*.slim" "*.json" "*.coffee")
+  "Extenstions of files to look in when greping views with `helm-rails-grep-views'"
+  :group 'helm-rails
+  :type '(repeat string))
+
+(defcustom helm-rails-javascripts-grep-exts
+  '("*.js" "*.coffee")
+  "Extenstions of files to look in when greping javascripts with `helm-rails-grep-javascripts'"
+  :group 'helm-rails
+  :type '(repeat string))
+
+(defcustom helm-rails-stylesheets-grep-exts
+  '("*.css" "*.scss" "*.sass")
+  "Extenstions of files to look in when greping stylesheets with `helm-rails-grep-stylesheets'"
+  :group 'helm-rails
+  :type '(repeat string))
+
 (defvar helm-rails-resources-schema
   '((:name models
            :exts '("*.rb")
 	   :re "^app/models/(.+)$"
 	   :path "app/models/")
     (:name views
-           :exts '("*.rb" "*.html" "*.js" "*.erb" "*.haml" "*.slim" "*.json" "*.coffee")
+           :exts helm-rails-views-grep-exts
 	   :re "^app/views/(.+)$"
 	   :path "app/views/")
     (:name controllers
@@ -74,11 +92,11 @@
 	   :re "^lib/(.+)$"
 	   :path "lib/")
     (:name javascripts
-           :exts '("*.js" "*.coffee")
+           :exts helm-rails-javascripts-grep-exts
 	   :re "^(public/javascripts/.+|app/assets/javascripts/.+|lib/assets/javascripts/.+|vendor/assets/javascripts/.+)$"
 	   :path "")
     (:name stylesheets
-           :exts '("*.css" "*.scss" "*.sass")
+           :exts helm-rails-stylesheets-grep-exts
 	   :re "^(public/stylesheets/.+|app/assets/stylesheets/.+)$"
 	   :path "")
     (:name all
