@@ -39,7 +39,7 @@
 (require 'inflections)
 
 (defcustom helm-rails-default-grep-exts
-  '("*.rb" "*.html" "*.js" "*.erb" "*.haml" "*.slim" "*.yml" "*.yaml" "*.json" "*.coffee")
+  '("*.rb" "*.html" "*.js" "*.erb" "*.haml" "*.slim" "*.yml" "*.yaml" "*.json" "*.coffee" "*.css" "*.scss" "*.sass")
   "Extenstions of files to look in when greping whole project with `helm-rails-grep-all'"
   :group 'helm-rails
   :type '(repeat string))
