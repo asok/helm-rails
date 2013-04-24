@@ -207,7 +207,7 @@
 
 (defun helm-rails-git-output (command)
   (let ((file-path (helm-rails-file-relative-path (buffer-file-name)))
-        (args (format "git ls-files --full-name -- %s | %s" (helm-rails-root) command))
+        (args (format "( git ls-files --other --exclude-standard ; git ls-files --full-name -- %s ) | %s" (helm-rails-root) command))
         (shell-file-name "/bin/bash"))
     (shell-command-to-string (if file-path (concat args " | grep -v " file-path) args))))
 
