@@ -47,4 +47,5 @@
 					     "config/environment.rb"
 					     )
 			  do (create-file-in-repo repo file-path))
+                    (shell-command "touch app/models/profile.rb")
 		    (ert-run-tests-batch t))
