@@ -11,6 +11,10 @@ It is possible to grep each of the resources with `helm-rails-grep-*` (like `hel
 
 Just do `M-x el-get-install RET helm-rails RET`.
 
+### melpa
+
+`M-x package-install RET helm-rails RET`
+
 ### Manual
 
 Clone the repository somewhere on your hard drive. And add this to your emacs setup:
@@ -28,7 +32,7 @@ There are no keybindings set. For example me, I'm using something like this:
 
 # Limitations
 
-* no notion of `tests/` directory (to implemented)
+* no notion of `tests/` directory (to implement)
 * depends on `git`, `grep` and `sed` binaries
 
 # Tricks
@@ -39,7 +43,7 @@ For example if you store your `Delayed::Job` jobs under `app/jobs/` directory yo
 
     (helm-rails-def-resource 'jobs "app/jobs/" "^app/jobs/(.+)$")
 
-The first argument will be the suffix of the name of the command. Second argument is the relative path to the directory where the files are stored. And the third argument is the regular expression for to find the files (note: it is a bash regular expression).
+The first argument will be the suffix of the name of the command. Second argument is the relative path to the directory where the files are stored. And the third argument is the regular expression to find the files (note: it is a bash not emacs regular expression).
 
 # Contribution
 
