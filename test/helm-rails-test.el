@@ -71,8 +71,9 @@
              (expect '("app/controllers/admin/users_controller.rb"
         	       "app/controllers/users_controller.rb")
         	     (find-file "app/models/user.rb")
-        	     (magit-split-lines
-        	      (helm-rails-current-scope-files 'controllers))))
+        	     (split-string
+		      (replace-regexp-in-string "\n$" "" (helm-rails-current-scope-files 'controllers))
+		      "\n")))
        (desc "finding model from controller"
              (expect "app/models/user.rb\n"
         	     (find-file "app/controllers/users_controller.rb")
@@ -89,8 +90,9 @@
              (expect '("app/views/users/index.html.erb"
         	       "app/views/users/show.html.erb")
         	     (find-file "app/controllers/users_controller.rb")
-        	     (magit-split-lines
-        	      (helm-rails-current-scope-files 'views))))
+		     (split-string
+        	      (replace-regexp-in-string "\n$" "" (helm-rails-current-scope-files 'views))
+		      "\n")))
        (desc "finding javascripts from controller"
              (expect "app/assets/javascripts/users.js.coffee.erb\n"
         	     (find-file "app/controllers/users_controller.rb")
@@ -104,8 +106,10 @@
         	       "spec/helpers/users_helper_spec.rb"
         	       "spec/models/user_spec.rb")
         	     (find-file "app/controllers/users_controller.rb")
-        	     (magit-split-lines
-        	      (helm-rails-current-scope-files 'specs))))
+		     (split-string
+		      (replace-regexp-in-string "\n$" "" (helm-rails-current-scope-files 'specs))
+		      "\n")))
+
        (desc "finding non-existant spec from controller"
              (expect ""
         	     (find-file "app/controllers/people_controller.rb")
@@ -115,8 +119,9 @@
              (expect '("spec/controllers/users_controller_spec.rb"
         	       "spec/helpers/users_helper_spec.rb")
         	     (find-file "spec/models/user_spec.rb")
-        	     (magit-split-lines
-        	      (helm-rails-current-scope-files 'specs)))
+        	     (split-string
+        	      (replace-regexp-in-string "\n$" "" (helm-rails-current-scope-files 'specs))
+		      "\n"))
              )
        )
  )
