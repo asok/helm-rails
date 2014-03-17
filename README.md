@@ -47,10 +47,10 @@ The first argument will be the suffix of the name of the command. Second argumen
 
 # Contribution
 
-Install [carton](https://github.com/rejeep/carton) if you haven't already, then:
+Install [cask](https://github.com/cask/cask) if you haven't already, then:
 
 	$ cd /path/to/helm-rails
-	$ carton install
+	$ cask install
 	
 Run all tests with:
 
