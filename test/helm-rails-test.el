@@ -71,9 +71,8 @@
              (expect '("app/controllers/admin/users_controller.rb"
         	       "app/controllers/users_controller.rb")
         	     (find-file "app/models/user.rb")
-        	     (split-string
-		      (replace-regexp-in-string "\n$" "" (helm-rails-current-scope-files 'controllers))
-		      "\n")))
+		     (helm-rails-split-lines
+		      (helm-rails-current-scope-files 'controllers))))
        (desc "finding model from controller"
              (expect "app/models/user.rb\n"
         	     (find-file "app/controllers/users_controller.rb")
@@ -90,9 +89,8 @@
              (expect '("app/views/users/index.html.erb"
         	       "app/views/users/show.html.erb")
         	     (find-file "app/controllers/users_controller.rb")
-		     (split-string
-        	      (replace-regexp-in-string "\n$" "" (helm-rails-current-scope-files 'views))
-		      "\n")))
+		     (helm-rails-split-lines
+		      (helm-rails-current-scope-files 'views))))
        (desc "finding javascripts from controller"
              (expect "app/assets/javascripts/users.js.coffee.erb\n"
         	     (find-file "app/controllers/users_controller.rb")
@@ -106,9 +104,8 @@
         	       "spec/helpers/users_helper_spec.rb"
         	       "spec/models/user_spec.rb")
         	     (find-file "app/controllers/users_controller.rb")
-		     (split-string
-		      (replace-regexp-in-string "\n$" "" (helm-rails-current-scope-files 'specs))
-		      "\n")))
+		     (helm-rails-split-lines
+		      (helm-rails-current-scope-files 'specs))))
 
        (desc "finding non-existant spec from controller"
              (expect ""
@@ -119,9 +116,8 @@
              (expect '("spec/controllers/users_controller_spec.rb"
         	       "spec/helpers/users_helper_spec.rb")
         	     (find-file "spec/models/user_spec.rb")
-        	     (split-string
-        	      (replace-regexp-in-string "\n$" "" (helm-rails-current-scope-files 'specs))
-		      "\n"))
+		     (helm-rails-split-lines
+		      (helm-rails-current-scope-files 'specs)))
              )
        )
  )
