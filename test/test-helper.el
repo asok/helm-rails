@@ -17,3 +17,7 @@
     (write-file (format "%s/%s" repo dummy-file))
     (cd (expand-file-name ".." (magit-git-dir)))
     (magit-run-git "add" dummy-file)))
+
+(defun helm-rails-split-lines (lines)
+  (split-string
+   (replace-regexp-in-string "\n$" "" lines) "\n"))
