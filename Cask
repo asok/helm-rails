@@ -5,4 +5,5 @@
 
 (development
  (depends-on "ert")
+ (depends-on "ert-expectations")
  (depends-on "magit"))
