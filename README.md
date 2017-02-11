@@ -1,3 +1,9 @@
+# WARNING
+
+I am not using this package myself. Instead I've created and I'm using right now [projectile-rails](https://github.com/asok/projectile-rails) which serves me the same purpose as helm-rails did.
+That means I'm not maintaining helm-rails anymore.
+If anyone would like to start maintaining it please express it by creating an issue and letting me know.
+
 # Synopsis
 
 helm-rails is an extension for [helm](https://github.com/emacs-helm/helm) for working with Rails project. It is borrowing idea from [helm-git](https://github.com/maio/helm-git) that is asking git for a list of candidates.
